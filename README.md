@@ -1,34 +1,42 @@
-<div align="center">
+<p align="center">
+  <img src="assets/hero.svg" alt="Mac Storage Cleanup hero" width="880">
+</p>
 
-# Mac Storage Cleanup
+# Mac Storage Cleanup — paid Codex skill
 
-### Stop deleting. Start proving.
+**Stop deleting. Start proving.**
 
-![Mac Storage Cleanup hero](assets/hero.svg)
+<p align="center">
+  <a href="docs/index.html">Landing page</a> ·
+  <a href="mac-storage-cleanup.skill">Download skill</a> ·
+  <a href="LICENSE-EULA.md">Paid terms</a> ·
+  <a href="LICENSE-MIT.txt">MIT demo</a>
+</p>
 
-[Download the skill](mac-storage-cleanup.skill) · [Open landing page](docs/index.html) · [Licença comercial (EULA)](LICENSE-EULA.md) · [MIT demo](LICENSE-MIT.txt)
+## What you are buying
 
-</div>
+A production-ready cleanup system that removes only generated project artifacts and duplicate files while keeping recovery and safety controls enabled by default.
 
-## What this repo ships
+- **No blind delete:** all actions are scoped, visible, and reversible.
+- **No surprise loss:** active processes, credentials, personal media, and memories stay protected.
+- **No trust games:** duplicate detection is SHA-256 exact and read-first.
+- **No clutter in the final result:** manifest and post-action checks are included.
 
-This is a production-minded Codex skill for macOS cleanup with audit-grade behavior:
+## What is inside the release
 
-- Dry-run first for every operation
-- Automatic process and manifest guards
-- Recoverable staging before final deletion
-- Duplicate discovery by exact SHA-256 fingerprint
-- Strong default protections for credentials, media, memories and active projects
+- `LICENSE-EULA.md`: commercial usage terms for paid redistribution.
+- `LICENSE-MIT.txt`: public demonstration terms.
+- `mac-storage-cleanup.skill`: installation package.
+- `docs/index.html`: dedicated product page style shell.
+- `SHA256SUMS`: integrity file for the release.
 
-## Install
+## Fast path to test
 
 ```bash
 mkdir -p ~/.codex/skills
 unzip -o mac-storage-cleanup.skill -d ~/.codex/skills
 shasum -a 256 mac-storage-cleanup.skill
 ```
-
-## Use it (safe-by-design)
 
 ```bash
 python3 mac-storage-cleanup/scripts/safe_generated_cleanup.py \
@@ -46,22 +54,21 @@ python3 mac-storage-cleanup/scripts/find_duplicate_files.py \
   --min-size 1048576 --protect /absolute/critical/folder /absolute/folder
 ```
 
-## Why this model wins
-
-- **Less risk**: active process and protected-path detection before action.
-- **More certainty**: staging + manifest hash check keeps reversible decisions possible.
-- **More control**: only `.next` and `node_modules` are candidates in `/apply`.
-
 ## Safety contract
 
-This product is intentionally selective. Ambiguous targets are blocked and nothing is removed without explicit scope. Sensitive folders and `Warning/Default` remain protected by default.
+Only `.next` and `node_modules` are accepted for `/apply` cleanup.
 
-## Licensing
+If a target is ambiguous or active, the skill blocks the action.
 
-- `LICENSE-EULA.md`: proprietary terms for the paid product
-- `LICENSE-MIT.txt`: demo terms for public demonstration usage
+`Warning/Default` is protected by default, and all manual overrides are explicit.
 
-## Contributing
+## Sales details
 
-Fork this repo only for review and adaptation experiments.  
-No source code unrelated to cleanup safety is accepted.
+The paid product is distributed under `LICENSE-EULA.md`.
+
+The demo package is intentionally limited to inspection and non-commercial use under `LICENSE-MIT.txt`.
+
+## Contribution policy
+
+This repo is curated for product quality.
+Pull requests are accepted only with safety, verification, and license integrity in scope.
