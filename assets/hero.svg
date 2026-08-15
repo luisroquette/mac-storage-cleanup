@@ -17,19 +17,19 @@
   <path d="M140 680C350 530 420 620 620 470S910 230 1110 350 1300 580 1480 420" fill="none" stroke="#75f5e1" stroke-opacity=".15" stroke-width="3"/>
   <path d="M140 680C350 530 420 620 620 470S910 230 1110 350 1300 580 1480 420" fill="none" stroke="url(#cyan)" stroke-width="5" stroke-dasharray="2 26" stroke-linecap="round"/>
   <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#a7b1c8">
-    <text x="100" y="110" font-size="18" letter-spacing="4">MAC STORAGE CLEANUP / EVIDENCE TRAIL</text>
-    <text x="100" y="790" font-size="16" fill="#75f5e1">01  INVENTORY</text><text x="410" y="790" font-size="16">02  GUARD</text><text x="720" y="790" font-size="16">03  VERIFY</text>
+    <text x="100" y="120" font-size="21" letter-spacing="4">MAC STORAGE CLEANUP / EVIDENCE TRAIL</text>
+    <text x="100" y="810" font-size="19" fill="#75f5e1">01  INVENTORY</text><text x="420" y="810" font-size="19">02  GUARD</text><text x="740" y="810" font-size="19">03  VERIFY</text>
   </g>
-  <g fill="#111522" stroke="#75f5e1" stroke-width="3">
-    <circle cx="140" cy="680" r="22"/><circle cx="620" cy="470" r="22"/><circle cx="1110" cy="350" r="22"/><circle cx="1480" cy="420" r="22"/>
+  <g fill="#111522" stroke="#75f5e1" stroke-width="4">
+    <circle cx="140" cy="680" r="26"/><circle cx="620" cy="470" r="26"/><circle cx="1110" cy="350" r="26"/><circle cx="1480" cy="420" r="26"/>
   </g>
-  <g transform="translate(1030 100)">
-    <rect width="360" height="220" rx="18" fill="#151c2c" stroke="#2d3b55"/>
-    <text x="28" y="46" font-family="ui-monospace, monospace" font-size="14" fill="#75f5e1">PROTECTED PATH</text>
-    <path d="M172 82l48 20v38c0 38-24 63-48 76-24-13-48-38-48-76v-38z" fill="#0d111c" stroke="#ff9f7a" stroke-width="3"/>
-    <path d="M151 139l15 15 29-34" fill="none" stroke="#ff9f7a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="28" y="194" font-family="ui-monospace, monospace" font-size="14" fill="#a7b1c8">never guessed. never blanket-deleted.</text>
+  <g transform="translate(1000 90)">
+    <rect width="400" height="248" rx="18" fill="#151c2c" stroke="#2d3b55"/>
+    <text x="30" y="52" font-family="ui-monospace, monospace" font-size="16" fill="#75f5e1">PROTECTED PATH</text>
+    <path d="M188 90l52 22v42c0 42-26 69-52 83-26-14-52-41-52-83v-42z" fill="#0d111c" stroke="#ff9f7a" stroke-width="3"/>
+    <path d="M165 152l16 16 32-37" fill="none" stroke="#ff9f7a" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="30" y="218" font-family="ui-monospace, monospace" font-size="16" fill="#a7b1c8">never guessed. never blanket-deleted.</text>
   </g>
-  <text x="100" y="270" font-family="ui-sans-serif, system-ui, sans-serif" font-size="86" font-weight="700" fill="#f5f7fb">Make room.</text>
-  <text x="100" y="360" font-family="ui-sans-serif, system-ui, sans-serif" font-size="86" font-weight="700" fill="url(#cyan)">Keep evidence.</text>
+  <text x="96" y="290" font-family="ui-sans-serif, system-ui, sans-serif" font-size="108" font-weight="700" fill="#f5f7fb">Make room.</text>
+  <text x="96" y="392" font-family="ui-sans-serif, system-ui, sans-serif" font-size="108" font-weight="700" fill="url(#cyan)">Keep evidence.</text>
 </svg>
