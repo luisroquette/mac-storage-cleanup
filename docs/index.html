@@ -3,168 +3,256 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mac Storage Cleanup keeps your macOS cleanup safe by making risk visible before deletion. Dry-runs, process guards, duplicate discovery, and recoverable staging.">
+  <meta name="description" content="Mac Storage Cleanup is a paid Codex skill for safe macOS cleanup with dry-runs, guardrails, and verifiable outcomes.">
   <meta property="og:image" content="../assets/og-card.svg">
-  <title>Mac Storage Cleanup — Safe cleanup is a workflow.</title>
+  <title>Mac Storage Cleanup — Safe by design</title>
   <style>
     :root{
-      --bg:#090d17;
-      --panel:#0d1524;
-      --ink:#f5f8ff;
-      --muted:#afbdd6;
-      --line:#26314d;
-      --teal:#54f4df;
-      --violet:#9f7cff;
-      --amber:#ff9462;
+      --bg:#090e18;
+      --ink:#eff3ff;
+      --ink-soft:#a9b6d6;
+      --ink-dim:#7a8bb2;
+      --panel:#0d1628;
+      --line:#27355a;
+      --teal:#56f0da;
+      --violet:#9a7cff;
+      --amber:#ff925c;
       --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
-      --sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      --sans:"Avenir Next",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
     *{box-sizing:border-box}
     html{background:var(--bg);color:var(--ink);font-family:var(--sans);scroll-behavior:smooth}
     body{margin:0;overflow-x:hidden}
     a{color:inherit}
-    .scene{position:fixed;inset:0;pointer-events:none;z-index:-2;background:
-      radial-gradient(circle at 4% 8%, #2c3a7a55 0, transparent 42%),
-      radial-gradient(circle at 92% 15%, #2fd5b940 0, transparent 38%),
-      linear-gradient(160deg,#090d17 0%,#090f1d 58%,#0f1626 100%);
+    .bg{
+      position:fixed;inset:0;z-index:-2;
+      background:
+        linear-gradient(145deg,#09101f 0%, #090f1f 46%, #0a101f 100%),
+        radial-gradient(1200px 420px at 8% -10%, #253f9a2f 0, transparent 68%),
+        radial-gradient(950px 300px at 92% 0%, #2fd6b62e 0, transparent 64%);
     }
-    .noise{position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(#ffffff12 1px, transparent 1px);background-size:3px 3px;opacity:.09;z-index:-1}
-    .wrap{max-width:1140px;margin:auto;padding:0 28px}
-    .nav{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:24px 0;font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(6px);background:linear-gradient(180deg,#090d1760,#090d1700)}
-    .brand{color:var(--teal);text-decoration:none;font-weight:700}
-    .navlinks{display:flex;gap:20px;color:var(--muted)}
+    .grain{
+      position:fixed;inset:0;z-index:-1;opacity:.09;pointer-events:none;
+      background-image:radial-gradient(circle at 1px 1px, #ffffff22 1px, transparent 0);
+      background-size:3px 3px;
+    }
+    .wrap{max-width:1120px;margin:auto;padding:0 24px}
+    .nav{
+      position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;
+      padding:22px 0;font:12px var(--mono);letter-spacing:.11em;text-transform:uppercase;
+      backdrop-filter:blur(8px);
+      background:linear-gradient(180deg,#090e184f,#090e1800);
+      border-bottom:1px solid transparent;
+    }
+    .brand{color:var(--teal);text-decoration:none;font-weight:700;letter-spacing:.04em}
+    .navlinks{display:flex;gap:18px;color:var(--ink-soft)}
     .navlinks a{text-decoration:none}
     .navlinks a:hover,.navlinks a:focus-visible{color:var(--teal)}
-    .hero{padding:56px 0 74px;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
-    .eyebrow{font:12px var(--mono);letter-spacing:.16em;color:var(--violet);text-transform:uppercase}
-    h1{font-size:clamp(44px,7vw,100px);line-height:.92;letter-spacing:-.055em;margin:18px 0 20px}
-    h1 span{color:var(--teal)}
-    .lede{font-size:20px;line-height:1.5;color:var(--muted);max-width:560px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
-    .button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border:1px solid var(--line);text-decoration:none;font-weight:700;font-size:14px}
-    .button.primary{background:linear-gradient(130deg,var(--teal),#89ffec);color:#08101b}
-    .button.secondary{color:var(--ink);border-color:#39476f}
-    .button:hover,.button:focus-visible{transform:translateY(-1px);box-shadow:0 10px 30px #54f4df2d;outline:2px solid var(--teal);outline-offset:2px}
-    .hero-art{border:1px solid var(--line);padding:12px;background:var(--panel);border-radius:20px;box-shadow:0 22px 76px #02061080}
-    .hero-art img{width:100%;height:auto;display:block;border-radius:14px}
-    .micro{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;color:var(--muted);font-size:12px;margin-top:24px}
-    .micro b{display:block;color:var(--ink);font:700 12px var(--mono)}
-    .micro span{background:var(--panel);padding:8px 10px;border:1px solid var(--line);border-radius:10px}
-    section{padding:54px 0;border-top:1px solid #24315444}
-    .section-head{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}
-    .section-head h2{font-size:clamp(30px,4.4vw,54px);margin:0;letter-spacing:-.05em;line-height:.95}
-    .section-head p{max-width:460px;color:var(--muted);line-height:1.55;margin:0}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .card{padding:20px 20px 22px;border:1px solid var(--line);background:linear-gradient(180deg,#101b2f 0%,#0c1524 100%);min-height:230px}
-    .label{font:12px var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.1em}
-    .card h3{font-size:28px;line-height:1.05;margin:14px 0 10px}
-    .card p{color:var(--muted);line-height:1.55;margin:0}
-    .terminal{background:#060a12;border:1px solid var(--line);padding:22px;border-radius:12px;line-height:1.65;font:14px/1.6 var(--mono);color:#cbdaff;overflow:auto}
-    .ok{color:var(--teal)}.dim{color:#75829f}
-    .quote{font-size:clamp(32px,5vw,58px);line-height:1.08;letter-spacing:-.045em;margin:0;color:var(--ink)}
-    .quote em{font-style:normal;color:var(--amber)}
-    .footer{padding:30px 0 64px;color:#95a6cd;font-size:12px;display:flex;justify-content:space-between;gap:18px}
-    .footer a{color:var(--teal)}
-    .footline{display:flex;flex-wrap:wrap;gap:14px}
-    @media(max-width:920px){
-      .hero{grid-template-columns:1fr;padding-top:36px}
-      .hero-art{order:-1}
-      .grid{grid-template-columns:1fr}
-      .micro{grid-template-columns:1fr 1fr}
-      .section-head{display:block}
-      .section-head p{margin-top:14px}
-      .navlinks a:nth-child(2){display:none}
+    .hero{
+      padding:68px 0 72px;
+      display:grid;
+      grid-template-columns:1.03fr .97fr;
+      gap:40px;
+      align-items:center;
     }
-    @media(max-width:560px){
-      .wrap{padding:0 18px}
-      .micro{grid-template-columns:1fr}
-      .nav{padding:20px 0}
-      .footer{display:block}
-      .footline{margin-top:12px}
+    .eyebrow{font:12px var(--mono);color:var(--violet);text-transform:uppercase;letter-spacing:.13em}
+    h1{
+      margin:14px 0;
+      font-size:clamp(50px,8vw,108px);
+      line-height:.94;
+      letter-spacing:-.055em;
+    }
+    h1 span{color:var(--teal)}
+    .lede{color:var(--ink-soft);font-size:21px;line-height:1.48;max-width:580px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .button{
+      min-height:48px;padding:0 18px;border-radius:999px;
+      display:inline-flex;align-items:center;justify-content:center;
+      border:1px solid var(--line);text-decoration:none;font-weight:700;font-size:14px;
+      transition:transform .16s ease, box-shadow .16s ease;
+    }
+    .button.primary{background:linear-gradient(130deg,var(--teal),#89f7eb);color:#081321}
+    .button.secondary{background:#0b1525;color:var(--ink)}
+    .button:hover,.button:focus-visible{
+      transform:translateY(-1px);
+      box-shadow:0 10px 30px #56f0da24;
+      outline:2px solid var(--teal);outline-offset:2px;
+    }
+    .cardstrip{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .metric{
+      border:1px solid var(--line);padding:12px 12px 14px;background:var(--panel);border-radius:14px;
+      line-height:1.18;
+    }
+    .metric b{display:block;color:var(--teal);font:700 16px var(--mono)}
+    .metric span{font-size:12px;color:var(--ink-soft)}
+    .hero-art{border:1px solid var(--line);padding:12px;border-radius:18px;background:var(--panel)}
+    .hero-art img{width:100%;height:auto;display:block;border-radius:10px}
+    .panel{
+      padding:64px 0;border-top:1px solid #26345a55;
+    }
+    .panel-title{
+      font-size:clamp(32px,4.8vw,56px);
+      letter-spacing:-.05em;
+      margin:0 0 18px;
+    }
+    .sectiongrid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+    .proof{
+      border:1px solid var(--line);padding:16px;background:#07101f;border-radius:12px;
+      font:14px/1.63 var(--mono);color:#ccd7f2;
+    }
+    .proof .dim{color:#7a89a8}
+    .proof .ok{color:var(--teal)}
+    .steps{
+      display:grid;
+      gap:12px;
+    }
+    .step{
+      padding:16px;border:1px solid var(--line);background:#0b1424;
+      border-radius:12px;
+      display:grid;gap:8px;
+    }
+    .step .idx{font:12px var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em}
+    .step h3{margin:0;font-size:30px;line-height:1.05}
+    .step p{margin:0;color:var(--ink-soft);line-height:1.55}
+    .offer{
+      border:1px solid var(--line);background:linear-gradient(160deg,#13203a,#0c1424);
+      padding:26px;border-radius:18px;
+    }
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .chip{
+      border:1px solid var(--line);padding:7px 10px;border-radius:999px;color:var(--ink-soft);font-size:12px;font-weight:600
+    }
+    .pill{
+      display:inline-block;margin-top:12px;padding:5px 10px;border-radius:999px;
+      border:1px solid #3f4f78;color:var(--teal);font:12px var(--mono);
+    }
+    .footer{
+      padding:28px 0 72px;
+      color:var(--ink-dim);font-size:12px;
+      border-top:1px solid #26345a55;
+      display:flex;justify-content:space-between;gap:14px;
+      flex-wrap:wrap;
+    }
+    .footer a{color:var(--teal);text-decoration:none}
+    .fade{
+      animation:fadeUp .5s ease both;
+    }
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @media(max-width:1000px){
+      .hero,.sectiongrid{grid-template-columns:1fr}
+      .cardstrip{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:640px){
+      .cardstrip{grid-template-columns:1fr}
+      .navlinks a:nth-child(2),.navlinks a:nth-child(3){display:none}
+      .nav{flex-wrap:wrap;gap:10px}
+      .actions .button{width:100%}
+      .offer{padding:18px}
     }
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}
-      .button:hover,.button:focus-visible{transform:none}
+      .fade{animation:none}
     }
   </style>
 </head>
 <body>
-  <div class="scene"></div>
-  <div class="noise"></div>
+  <div class="bg"></div>
+  <div class="grain"></div>
   <div class="wrap">
     <nav class="nav" aria-label="Primary">
-      <a class="brand" href="../README.md">mac-storage-cleanup</a>
+      <a class="brand" href="../README.md">MAC STORAGE CLEANUP</a>
       <div class="navlinks">
         <a href="#method">Method</a>
-        <a href="#safety">Safety</a>
         <a href="#proof">Proof</a>
-        <a href="../LICENSE-EULA.md">License</a>
+        <a href="#offer">Offer</a>
         <a href="../mac-storage-cleanup.skill">Download</a>
       </div>
     </nav>
-    <main>
-      <section class="hero" style="border-top:0">
-        <div>
-          <div class="eyebrow">Codex Skill • macOS</div>
-          <h1>Safe cleanup should feel<br><span>predictable.</span></h1>
-          <p class="lede">No blind deletes. No surprise losses. No panic mode. You get a strict workflow: inventory, guard, staging, verify.</p>
-          <div class="actions">
-            <a class="button primary" href="../mac-storage-cleanup.skill">Download bundle</a>
-            <a class="button secondary" href="../README.md">Read setup and usage</a>
-          </div>
-          <div class="micro">
-            <span><b>Dry run</b>Always starts with a dry run</span>
-            <span><b>Dual license</b>EULA + MIT demo mode</span>
-            <span><b>Process-aware</b>Blocks active dev processes</span>
-          </div>
+
+    <section class="hero fade">
+      <div>
+        <div class="eyebrow">commercial Codex skill</div>
+        <h1>Stop deleting.<br><span>Start proving.</span></h1>
+        <p class="lede">You get a safe and recoverable workflow for macOS cleanup:
+          dry-runs first, process-aware guards, duplicate hashing, and explicit post-action proof.</p>
+        <div class="actions">
+          <a class="button primary" href="../mac-storage-cleanup.skill">Download release</a>
+          <a class="button secondary" href="../LICENSE-EULA.md">Read commercial terms</a>
         </div>
-        <div class="hero-art">
-          <img src="../assets/hero.svg" alt="Storage workflow with staged cleanup and protected folders">
+        <div class="cardstrip">
+          <div class="metric"><b>Built for macOS + dev stacks</b><span>Safe cleanup of high-volume generated data</span></div>
+          <div class="metric"><b>Two-layer protection</b><span>Protected path + active process detection</span></div>
+          <div class="metric"><b>Recoverable operation</b><span>Staging-first, deletion by explicit action</span></div>
+          <div class="metric"><b>Dual license model</b><span>Paid EULA + demo MIT package</span></div>
         </div>
-      </section>
-      <section id="method">
-        <div class="section-head">
-          <h2>One system, three gates.</h2>
-          <p>Every destructive command must pass the same sequence: visibility, protection, and proof.</p>
-        </div>
-        <div class="grid">
-          <article class="card">
-            <div class="label">Gate 01</div>
-            <h3>Measure</h3>
-            <p>Maps `.next` and `node_modules` first and reports exact size and process context before anything moves.</p>
+      </div>
+      <div class="hero-art">
+        <img src="../assets/hero.svg" alt="Mac storage workflow with staged cleanup and protected boundaries">
+      </div>
+    </section>
+
+    <section class="panel fade" id="method">
+      <h2 class="panel-title">What makes the workflow sellable</h2>
+      <div class="sectiongrid">
+        <div class="steps">
+          <article class="step">
+            <span class="idx">Step 01</span>
+            <h3>Inventory</h3>
+            <p>Scan exact targets and estimate impact before you choose. No generic sweeps.</p>
           </article>
-          <article class="card">
-            <div class="label">Gate 02</div>
-            <h3>Protect</h3>
-            <p>Any active processes, credentials, browser profiles, and default system paths are excluded automatically.</p>
+          <article class="step">
+            <span class="idx">Step 02</span>
+            <h3>Guard</h3>
+            <p>Block active processes and protected directories so sessions, credentials, and project state stay untouched.</p>
           </article>
-          <article class="card">
-            <div class="label">Gate 03</div>
+          <article class="step">
+            <span class="idx">Step 03</span>
             <h3>Verify</h3>
-            <p>Moves are recoverable and only confirmed after manifest checks and post-action integrity reporting.</p>
+            <p>Move into staging first, verify hashes and manifests, then confirm the final state with a report.</p>
           </article>
         </div>
-      </section>
-      <section id="safety">
-        <div class="section-head"><h2>The safety contract</h2><p>No blanket trash empty, no recursive guesswork, no risky defaults.</p></div>
-        <div class="terminal">
-          <span class="dim">$</span> python3 safe_generated_cleanup.py --dry-run ./app/.next ./app/node_modules<br>
-          <span class="ok">OK</span> 2 targets · 1.7 GB · 0 active processes<br>
-          <span class="ok">DRY-RUN</span> no files changed<br><br>
-          <span class="dim">$</span> python3 find_duplicate_files.py --min-size 1048576 ./Downloads<br>
-          <span class="ok">READ-ONLY</span> exact SHA-256 groups reported<br>
-        </div>
-      </section>
-      <section id="proof">
-        <p class="quote">A real safety system is quiet.<br><em>Because it never bets on guessing.</em></p>
-      </section>
-    </main>
+
+        <aside class="offer" id="offer">
+          <span class="pill">Commercial positioning</span>
+          <h3 style="margin:8px 0 12px;">Paid license + clear separation</h3>
+          <p style="margin:0;color:var(--ink-soft);line-height:1.6">
+            Distribution follows a dual model: proprietary EULA for paid use and MIT terms for demo artifacts.
+            It is designed for agencies, teams, and creators who need repeatable operations.
+          </p>
+          <div class="chips">
+            <span class="chip">No blanket deletes</span>
+            <span class="chip">SHA-256 duplicate scanning</span>
+            <span class="chip">Process-aware checks</span>
+            <span class="chip">Manifest integrity checks</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="panel fade" id="proof">
+      <h2 class="panel-title">The proof language</h2>
+      <div class="proof">
+        <span class="dim">$</span> python3 safe_generated_cleanup.py --dry-run ./app/.next ./app/node_modules<br>
+        <span class="ok">APPROVED</span> 2 targets · 1.9 GB · 0 active processes<br>
+        <span class="ok">DRY-RUN</span> no files changed<br><br>
+        <span class="dim">$</span> python3 find_duplicate_files.py --min-size 1048576 ./Downloads<br>
+        <span class="ok">READ-ONLY</span> exact SHA-256 groups returned
+      </div>
+      <p style="color:var(--ink-soft);margin-top:14px;line-height:1.6">
+        This is the core difference between a cleanup script and a productized system:
+        you can inspect what will happen before anything is applied.
+      </p>
+    </section>
+
     <footer class="footer">
-      <span>MAC STORAGE CLEANUP</span>
-      <span class="footline">
-        <a href="../README.md">GitHub README</a>
-        <a href="../LICENSE-EULA.md">Paid EULA</a>
-        <a href="../LICENSE-MIT.txt">Demo MIT</a>
+      <span>MAC STORAGE CLEANUP · © Luis Roquette</span>
+      <span>
+        <a href="../README.md">Readme</a> ·
+        <a href="../LICENSE-EULA.md">EULA</a> ·
+        <a href="../LICENSE-MIT.txt">MIT</a> ·
         <a href="../mac-storage-cleanup.skill">Download</a>
       </span>
     </footer>
