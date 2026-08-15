@@ -150,6 +150,20 @@
 
     .sectiongrid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
 
+    .ba-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);border:1px solid var(--line)}
+    .ba-col{background:var(--panel);padding:22px}
+    .ba-col.after{background:var(--panel-2)}
+    .ba-label{display:block;font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+    .ba-col.before .ba-label{color:var(--amber)}
+    .ba-col.after .ba-label{color:var(--teal)}
+    .ba-col ul{list-style:none;margin:0;padding:0;display:grid;gap:13px}
+    .ba-col li{position:relative;padding-left:26px;color:var(--text-dim);line-height:1.5;font-size:14px}
+    .ba-col.before li::before{content:"✕";position:absolute;left:0;top:0;color:var(--amber);font-weight:700}
+    .ba-col.after li::before{content:"✓";position:absolute;left:0;top:0;color:var(--teal);font-weight:700}
+    .ba-col.after li{color:var(--text)}
+    @media(max-width:760px){ .ba-grid{grid-template-columns:1fr} }
+    .ba-col code{font:12px var(--mono);background:#1c1a12;color:var(--amber);padding:1px 5px;border-radius:2px}
+
     .log{border-left:2px solid var(--line);display:grid;gap:0}
     .entry{position:relative;padding:0 0 26px 26px}
     .entry:last-child{padding-bottom:0}
@@ -319,6 +333,30 @@
               <span class="status">Filed</span>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel fade" id="before-after">
+      <div class="panel-head"><span class="tag">§ 00</span><h2 class="panel-title">Before / After</h2></div>
+      <div class="ba-grid">
+        <div class="ba-col before">
+          <span class="ba-label">Before — every AI-heavy Mac</span>
+          <ul>
+            <li>RAM maxed running local models</li>
+            <li>SSD packed with node_modules, .next, and build caches</li>
+            <li>No idea what's actually safe to delete</li>
+            <li>One wrong <code>rm -rf</code> away from breaking a running project</li>
+          </ul>
+        </div>
+        <div class="ba-col after">
+          <span class="ba-label">After — Mac Storage Cleanup</span>
+          <ul>
+            <li>Dry-run shows exactly what would go, and how much space comes back</li>
+            <li>Active processes and protected paths stay untouched</li>
+            <li>Duplicates found by exact SHA-256 hash, never guesswork</li>
+            <li>Nothing deletes until you confirm — everything staged and recoverable</li>
+          </ul>
         </div>
       </div>
     </section>
