@@ -6,151 +6,210 @@
   <meta name="description" content="Mac Storage Cleanup is a paid Codex skill for safe macOS cleanup with dry-runs, guardrails, and verifiable outcomes.">
   <meta property="og:image" content="../assets/og-card.svg">
   <title>Mac Storage Cleanup — Safe by design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#090e18;
-      --ink:#eff3ff;
-      --ink-soft:#a9b6d6;
-      --ink-dim:#7a8bb2;
-      --panel:#0d1628;
-      --line:#27355a;
-      --teal:#56f0da;
-      --violet:#9a7cff;
-      --amber:#ff925c;
-      --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
-      --sans:"Avenir Next",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      /* base — sampled from the hero.svg / og-card.svg brand art, kept in lockstep */
+      --void:#090b12;
+      --panel:#111522;
+      --panel-2:#151c2c;
+      --line:#262f45;
+      --text:#f5f7fb;
+      --text-dim:#a7b1c8;
+      --text-faint:#5c657e;
+      /* stamp inks */
+      --teal:#75f5e1;
+      --blue:#36a8ff;
+      --amber:#ff9f7a;
+      /* the one spotlighted surface */
+      --paper:#ece6d6;
+      --paper-ink:#1b1710;
+      --paper-ink-dim:#5b5342;
+      --display:"Courier Prime",ui-monospace,SFMono-Regular,Menlo,monospace;
+      --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+      --sans:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
     }
     *{box-sizing:border-box}
-    html{background:var(--bg);color:var(--ink);font-family:var(--sans);scroll-behavior:smooth}
+    html{background:var(--void);color:var(--text);font-family:var(--sans);scroll-behavior:smooth}
     body{margin:0;overflow-x:hidden}
     a{color:inherit}
+    ::selection{background:var(--teal);color:var(--void)}
     .bg{
       position:fixed;inset:0;z-index:-2;
       background:
-        linear-gradient(145deg,#09101f 0%, #090f1f 46%, #0a101f 100%),
-        radial-gradient(1200px 420px at 8% -10%, #253f9a2f 0, transparent 68%),
-        radial-gradient(950px 300px at 92% 0%, #2fd6b62e 0, transparent 64%);
+        radial-gradient(1100px 460px at 10% -8%, #151c2c 0, transparent 62%),
+        radial-gradient(900px 340px at 96% 4%, #111522 0, transparent 58%),
+        var(--void);
     }
     .grain{
-      position:fixed;inset:0;z-index:-1;opacity:.09;pointer-events:none;
-      background-image:radial-gradient(circle at 1px 1px, #ffffff22 1px, transparent 0);
+      position:fixed;inset:0;z-index:-1;opacity:.05;pointer-events:none;
+      background-image:radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0);
       background-size:3px 3px;
     }
-    .wrap{max-width:1120px;margin:auto;padding:0 24px}
+    .wrap{max-width:1080px;margin:auto;padding:0 24px}
+
+    /* ---------- folder-tab nav ---------- */
     .nav{
-      position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;
-      padding:22px 0;font:12px var(--mono);letter-spacing:.11em;text-transform:uppercase;
-      backdrop-filter:blur(8px);
-      background:linear-gradient(180deg,#090e184f,#090e1800);
-      border-bottom:1px solid transparent;
+      position:sticky;top:0;z-index:5;display:flex;align-items:flex-end;gap:2px;
+      padding-top:20px;
+      backdrop-filter:blur(6px);
+      background:linear-gradient(180deg,#090b12dd,#090b1200 88%);
     }
-    .brand{color:var(--teal);text-decoration:none;font-weight:700;letter-spacing:.04em}
-    .navlinks{display:flex;gap:18px;color:var(--ink-soft)}
-    .navlinks a{text-decoration:none}
-    .navlinks a:hover,.navlinks a:focus-visible{color:var(--teal)}
-    .hero{
-      padding:68px 0 72px;
-      display:grid;
-      grid-template-columns:1.03fr .97fr;
-      gap:40px;
-      align-items:center;
+    .tab{
+      font:600 11px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+      color:var(--text-dim);text-decoration:none;
+      padding:12px 18px 10px;
+      background:var(--panel);
+      border:1px solid var(--line);border-bottom:none;
+      clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
     }
-    .eyebrow{font:12px var(--mono);color:var(--violet);text-transform:uppercase;letter-spacing:.13em}
+    .tab:hover,.tab:focus-visible{color:var(--teal);outline:none}
+    .tab.brand{color:var(--teal);font-weight:700;letter-spacing:.06em;padding-right:22px}
+    .tab-spacer{flex:1;border-bottom:1px solid var(--line);align-self:stretch;margin-bottom:0}
+    .tab.dl{background:var(--teal);color:#06110e;border-color:var(--teal);font-weight:700}
+    .navrow{display:flex;align-items:flex-end;width:100%}
+    .navlinks{display:flex;gap:2px;margin-left:auto}
+    @media(max-width:640px){ .navlinks a:not(.dl){display:none} }
+
+    /* ---------- hero / cover sheet ---------- */
+    .cover{
+      margin-top:0;border:1px solid var(--line);border-top:none;background:var(--panel);
+      padding:34px 30px 30px;
+    }
+    .meta-line{
+      display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;
+      font:11px var(--mono);color:var(--text-faint);letter-spacing:.08em;text-transform:uppercase;
+      padding-bottom:18px;margin-bottom:26px;border-bottom:1px dashed var(--line);
+    }
+    .meta-line .stampbadge{
+      margin-left:auto;position:relative;
+      font:700 10px var(--display);letter-spacing:.1em;color:var(--amber);
+      border:1.5px solid var(--amber);padding:4px 9px;border-radius:3px;
+      transform:rotate(-4deg);opacity:.9;
+    }
+    .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:start}
     h1{
-      margin:14px 0;
-      font-size:clamp(50px,8vw,108px);
-      line-height:.94;
-      letter-spacing:-.055em;
+      font-family:var(--display);font-weight:700;
+      margin:0 0 16px;font-size:clamp(38px,5.6vw,72px);
+      line-height:.98;letter-spacing:-.01em;text-transform:uppercase;
     }
-    h1 span{color:var(--teal)}
-    .lede{color:var(--ink-soft);font-size:21px;line-height:1.48;max-width:580px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    h1 .cross{color:var(--text-faint);text-decoration:line-through;text-decoration-thickness:3px;text-decoration-color:var(--amber)}
+    h1 .go{color:var(--teal)}
+    .lede{color:var(--text-dim);font-size:17px;line-height:1.6;max-width:520px;margin:0 0 26px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
     .button{
-      min-height:48px;padding:0 18px;border-radius:999px;
+      min-height:44px;padding:0 18px;border-radius:2px;
       display:inline-flex;align-items:center;justify-content:center;
-      border:1px solid var(--line);text-decoration:none;font-weight:700;font-size:14px;
-      transition:transform .16s ease, box-shadow .16s ease;
+      border:1px solid var(--line);text-decoration:none;
+      font:600 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;
+      transition:transform .15s ease, box-shadow .15s ease;
     }
-    .button.primary{background:linear-gradient(130deg,var(--teal),#89f7eb);color:#081321}
-    .button.secondary{background:#0b1525;color:var(--ink)}
-    .button:hover,.button:focus-visible{
-      transform:translateY(-1px);
-      box-shadow:0 10px 30px #56f0da24;
-      outline:2px solid var(--teal);outline-offset:2px;
+    .button.primary{background:var(--teal);color:#06110e;border-color:var(--teal)}
+    .button.secondary{background:transparent;color:var(--text)}
+    .button:hover,.button:focus-visible{transform:translateY(-1px);outline:2px solid var(--teal);outline-offset:2px}
+
+    .receipt{border:1px solid var(--line);background:var(--panel-2)}
+    .receipt-head{
+      display:flex;justify-content:space-between;padding:9px 14px;
+      font:600 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--text-faint);
+      border-bottom:1px dashed var(--line);
     }
-    .cardstrip{margin-top:26px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .metric{
-      border:1px solid var(--line);padding:12px 12px 14px;background:var(--panel);border-radius:14px;
-      line-height:1.18;
+    .receipt-row{
+      display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:baseline;
+      padding:11px 14px;border-bottom:1px solid var(--line);font-size:13px;
     }
-    .metric b{display:block;color:var(--teal);font:700 16px var(--mono)}
-    .metric span{font-size:12px;color:var(--ink-soft)}
-    .hero-art{border:1px solid var(--line);padding:12px;border-radius:18px;background:var(--panel)}
-    .hero-art img{width:100%;height:auto;display:block;border-radius:10px}
-    .panel{
-      padding:64px 0;border-top:1px solid #26345a55;
+    .receipt-row:last-child{border-bottom:none}
+    .receipt-row .no{font:12px var(--mono);color:var(--text-faint)}
+    .receipt-row .desc b{display:block;font-weight:600;color:var(--text)}
+    .receipt-row .desc span{color:var(--text-dim);font-size:12px}
+    .receipt-row .status{font:600 10px var(--mono);letter-spacing:.08em;color:var(--teal);white-space:nowrap}
+
+    .hero-art{position:relative;border:1px solid var(--line);padding:10px;background:var(--panel-2)}
+    .hero-art img{width:100%;height:auto;display:block}
+    .paperclip{position:absolute;top:-16px;left:22px;width:34px;height:56px;transform:rotate(-8deg)}
+
+    /* ---------- panels ---------- */
+    .panel{padding:56px 0;border-top:1px solid var(--line)}
+    .panel-head{display:flex;align-items:baseline;gap:14px;margin-bottom:28px}
+    .panel-head .tag{font:600 11px var(--mono);color:var(--amber);letter-spacing:.1em;text-transform:uppercase}
+    .panel-title{font-family:var(--display);font-weight:700;font-size:clamp(24px,3.4vw,36px);margin:0;letter-spacing:-.01em}
+
+    .sectiongrid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:start}
+
+    .log{border-left:2px solid var(--line);display:grid;gap:0}
+    .entry{position:relative;padding:0 0 26px 26px}
+    .entry:last-child{padding-bottom:0}
+    .entry::before{
+      content:"";position:absolute;left:-7px;top:2px;width:12px;height:12px;border-radius:50%;
+      background:var(--void);border:2px solid var(--teal);
     }
-    .panel-title{
-      font-size:clamp(32px,4.8vw,56px);
-      letter-spacing:-.05em;
-      margin:0 0 18px;
+    .entry .idx{display:block;font:700 11px var(--mono);color:var(--text-faint);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+    .entry h3{margin:0 0 6px;font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase;letter-spacing:.01em}
+    .entry p{margin:0;color:var(--text-dim);line-height:1.6;max-width:44ch}
+
+    .offer{border:1px solid var(--line);background:var(--panel);padding:24px}
+    .offer .stampbadge{
+      display:inline-block;font:700 10px var(--display);letter-spacing:.1em;color:var(--teal);
+      border:1.5px solid var(--teal);padding:4px 9px;border-radius:3px;transform:rotate(-3deg);margin-bottom:14px;
     }
-    .sectiongrid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
-    .proof{
-      border:1px solid var(--line);padding:16px;background:#07101f;border-radius:12px;
-      font:14px/1.63 var(--mono);color:#ccd7f2;
+    .offer h3{margin:0 0 10px;font-size:19px;font-weight:700}
+    .offer p{margin:0;color:var(--text-dim);line-height:1.65;font-size:14px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .chip{border:1px solid var(--line);padding:6px 10px;color:var(--text-dim);font:11px var(--mono);letter-spacing:.02em}
+
+    /* ---------- exhibit — the one spotlighted surface ---------- */
+    .exhibit-wrap{position:relative}
+    .exhibit{
+      position:relative;background:var(--paper);color:var(--paper-ink);
+      padding:30px 28px 34px;overflow:hidden;
+      clip-path:polygon(0 0,100% 0,100% 100%,98.3% 99.1%,96.4% 99.7%,94.2% 99.2%,92% 99.8%,90% 99.3%,
+        88% 99.9%,85.7% 99.2%,83.4% 99.8%,81% 99.3%,78.6% 99.9%,76.2% 99.2%,73.8% 99.8%,71.4% 99.3%,
+        69% 99.9%,66.6% 99.2%,64.2% 99.8%,61.8% 99.3%,59.4% 99.9%,57% 99.2%,54.6% 99.8%,52.2% 99.3%,
+        49.8% 99.9%,47.4% 99.2%,45% 99.8%,42.6% 99.3%,40.2% 99.9%,37.8% 99.2%,35.4% 99.8%,33% 99.3%,
+        30.6% 99.9%,28.2% 99.2%,25.8% 99.8%,23.4% 99.3%,21% 99.9%,18.6% 99.2%,16.2% 99.8%,13.8% 99.3%,
+        11.4% 99.9%,9% 99.2%,6.6% 99.8%,4.2% 99.3%,1.8% 99.9%,0 99.2%);
     }
-    .proof .dim{color:#7a89a8}
-    .proof .ok{color:var(--teal)}
-    .steps{
-      display:grid;
-      gap:12px;
+    .exhibit-label{font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--paper-ink-dim);margin-bottom:14px}
+    .term{
+      font:13px/1.85 var(--mono);color:#2a2416;background:#e2dbc6;border:1px solid #cfc6a9;
+      padding:16px;
     }
-    .step{
-      padding:16px;border:1px solid var(--line);background:#0b1424;
-      border-radius:12px;
-      display:grid;gap:8px;
+    .term .p{color:var(--paper-ink-dim)}
+    .term .cmd{color:var(--paper-ink)}
+    .stamps{display:flex;flex-wrap:wrap;gap:18px 26px;margin-top:22px}
+    .stamp{
+      position:relative;display:inline-flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+      padding:9px 16px;border-radius:50%/38%;mix-blend-mode:multiply;
+      filter:url(#roughen);
     }
-    .step .idx{font:12px var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em}
-    .step h3{margin:0;font-size:30px;line-height:1.05}
-    .step p{margin:0;color:var(--ink-soft);line-height:1.55}
-    .offer{
-      border:1px solid var(--line);background:linear-gradient(160deg,#13203a,#0c1424);
-      padding:26px;border-radius:18px;
+    .stamp.ok{border:3px solid var(--teal);color:#0f7d68;transform:rotate(-7deg)}
+    .stamp.dry{border:3px solid var(--blue);color:#0d5c96;transform:rotate(4deg)}
+    .stamp.ro{border:3px solid var(--amber);color:#a5542c;transform:rotate(-3deg)}
+    .exhibit-note{margin:22px 0 0;color:var(--paper-ink-dim);line-height:1.65;font-size:14px;max-width:64ch}
+
+    footer.foot{
+      padding:26px 0 60px;border-top:1px solid var(--line);
+      display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+      font:11px var(--mono);color:var(--text-faint);letter-spacing:.03em;
     }
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-    .chip{
-      border:1px solid var(--line);padding:7px 10px;border-radius:999px;color:var(--ink-soft);font-size:12px;font-weight:600
-    }
-    .pill{
-      display:inline-block;margin-top:12px;padding:5px 10px;border-radius:999px;
-      border:1px solid #3f4f78;color:var(--teal);font:12px var(--mono);
-    }
-    .footer{
-      padding:28px 0 72px;
-      color:var(--ink-dim);font-size:12px;
-      border-top:1px solid #26345a55;
-      display:flex;justify-content:space-between;gap:14px;
-      flex-wrap:wrap;
-    }
-    .footer a{color:var(--teal);text-decoration:none}
-    .fade{
-      animation:fadeUp .5s ease both;
-    }
-    @keyframes fadeUp{
-      from{opacity:0;transform:translateY(8px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-    @media(max-width:1000px){
+    footer.foot a{color:var(--teal);text-decoration:none}
+    footer.foot a:hover{text-decoration:underline}
+
+    .fade{animation:fadeUp .5s ease both}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    @media(max-width:900px){
       .hero,.sectiongrid{grid-template-columns:1fr}
-      .cardstrip{grid-template-columns:1fr 1fr}
+      .hero-art{order:-1}
     }
     @media(max-width:640px){
-      .cardstrip{grid-template-columns:1fr}
-      .navlinks a:nth-child(2),.navlinks a:nth-child(3){display:none}
-      .nav{flex-wrap:wrap;gap:10px}
-      .actions .button{width:100%}
-      .offer{padding:18px}
+      .cover{padding:24px 18px 22px}
+      .meta-line .stampbadge{margin-left:0}
+      .actions .button{flex:1}
+      .stamps{gap:14px}
     }
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}
@@ -161,67 +220,109 @@
 <body>
   <div class="bg"></div>
   <div class="grain"></div>
+
+  <!-- hidden defs: rough stamp-edge filter + paperclip icon -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="roughen" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.2"/>
+    </filter>
+    <symbol id="paperclip" viewBox="0 0 34 56">
+      <path d="M9 14a8 8 0 0 1 16 0v26a5 5 0 0 1-10 0V18a2 2 0 0 1 4 0v20"
+            fill="none" stroke="#c7cede" stroke-width="2.6" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
   <div class="wrap">
     <nav class="nav" aria-label="Primary">
-      <a class="brand" href="../README.md">MAC STORAGE CLEANUP</a>
-      <div class="navlinks">
-        <a href="#method">Method</a>
-        <a href="#proof">Proof</a>
-        <a href="#offer">Offer</a>
-        <a href="../mac-storage-cleanup.skill">Download</a>
+      <div class="navrow">
+        <a class="tab brand" href="../README.md">MSC</a>
+        <div class="navlinks">
+          <a class="tab" href="#method">Method</a>
+          <a class="tab" href="#proof">Exhibit</a>
+          <a class="tab" href="#offer">Terms</a>
+          <a class="tab dl" href="../mac-storage-cleanup.skill">Download</a>
+        </div>
+        <span class="tab-spacer" aria-hidden="true"></span>
       </div>
     </nav>
 
-    <section class="hero fade">
-      <div>
-        <div class="eyebrow">commercial Codex skill</div>
-        <h1>Stop deleting.<br><span>Start proving.</span></h1>
-        <p class="lede">You get a safe and recoverable workflow for macOS cleanup:
-          dry-runs first, process-aware guards, duplicate hashing, and explicit post-action proof.</p>
-        <div class="actions">
-          <a class="button primary" href="../mac-storage-cleanup.skill">Download release</a>
-          <a class="button secondary" href="../LICENSE-EULA.md">Read commercial terms</a>
-        </div>
-        <div class="cardstrip">
-          <div class="metric"><b>Built for macOS + dev stacks</b><span>Safe cleanup of high-volume generated data</span></div>
-          <div class="metric"><b>Two-layer protection</b><span>Protected path + active process detection</span></div>
-          <div class="metric"><b>Recoverable operation</b><span>Staging-first, deletion by explicit action</span></div>
-          <div class="metric"><b>Dual license model</b><span>Paid EULA + demo MIT package</span></div>
-        </div>
+    <section class="cover fade">
+      <div class="meta-line">
+        <span>Field report · storage recovery</span>
+        <span>Ref MSC-01</span>
+        <span>Platform macOS</span>
+        <span class="stampbadge">Commercial release</span>
       </div>
-      <div class="hero-art">
-        <img src="../assets/hero.svg" alt="Mac storage workflow with staged cleanup and protected boundaries">
+
+      <div class="hero">
+        <div>
+          <h1><span class="cross">Stop deleting.</span><br><span class="go">Start proving.</span></h1>
+          <p class="lede">A safe, recoverable workflow for macOS cleanup — dry-run first, guard every
+            running process, hash exact duplicates, and leave a written record of exactly what changed.</p>
+          <div class="actions">
+            <a class="button primary" href="../mac-storage-cleanup.skill">Download release</a>
+            <a class="button secondary" href="../LICENSE-EULA.md">Read commercial terms</a>
+          </div>
+
+          <div class="receipt">
+            <div class="receipt-head"><span>Intake receipt</span><span>4 items</span></div>
+            <div class="receipt-row">
+              <span class="no">01</span>
+              <span class="desc"><b>macOS + dev stacks</b><span>Safe cleanup of high-volume generated data</span></span>
+              <span class="status">Covered</span>
+            </div>
+            <div class="receipt-row">
+              <span class="no">02</span>
+              <span class="desc"><b>Two-layer protection</b><span>Protected paths + active-process detection</span></span>
+              <span class="status">Active</span>
+            </div>
+            <div class="receipt-row">
+              <span class="no">03</span>
+              <span class="desc"><b>Recoverable staging</b><span>Nothing deletes until you confirm it</span></span>
+              <span class="status">Enforced</span>
+            </div>
+            <div class="receipt-row">
+              <span class="no">04</span>
+              <span class="desc"><b>Dual license</b><span>Paid EULA + MIT demo package</span></span>
+              <span class="status">Filed</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-art">
+          <svg class="paperclip" aria-hidden="true"><use href="#paperclip"/></svg>
+          <img src="../assets/hero.svg" alt="Mac storage workflow with staged cleanup and protected boundaries">
+        </div>
       </div>
     </section>
 
     <section class="panel fade" id="method">
-      <h2 class="panel-title">What makes the workflow sellable</h2>
+      <div class="panel-head"><span class="tag">§ 01</span><h2 class="panel-title">How the recovery works</h2></div>
       <div class="sectiongrid">
-        <div class="steps">
-          <article class="step">
-            <span class="idx">Step 01</span>
-            <h3>Inventory</h3>
-            <p>Scan exact targets and estimate impact before you choose. No generic sweeps.</p>
+        <div class="log">
+          <article class="entry">
+            <span class="idx">Entry 01 — Inventory</span>
+            <h3>Scan the exact targets</h3>
+            <p>List what would be touched and estimate the impact before you choose anything. No generic sweeps.</p>
           </article>
-          <article class="step">
-            <span class="idx">Step 02</span>
-            <h3>Guard</h3>
-            <p>Block active processes and protected directories so sessions, credentials, and project state stay untouched.</p>
+          <article class="entry">
+            <span class="idx">Entry 02 — Guard</span>
+            <h3>Block what's running</h3>
+            <p>Active processes and protected directories stay untouched, so sessions, credentials, and project state survive.</p>
           </article>
-          <article class="step">
-            <span class="idx">Step 03</span>
-            <h3>Verify</h3>
-            <p>Move into staging first, verify hashes and manifests, then confirm the final state with a report.</p>
+          <article class="entry">
+            <span class="idx">Entry 03 — Verify</span>
+            <h3>Stage, then confirm</h3>
+            <p>Move into recoverable staging first, verify hashes and manifests, then close the case with a written report.</p>
           </article>
         </div>
 
         <aside class="offer" id="offer">
-          <span class="pill">Commercial positioning</span>
-          <h3 style="margin:8px 0 12px;">Paid license + clear separation</h3>
-          <p style="margin:0;color:var(--ink-soft);line-height:1.6">
-            Distribution follows a dual model: proprietary EULA for paid use and MIT terms for demo artifacts.
-            It is designed for agencies, teams, and creators who need repeatable operations.
-          </p>
+          <span class="stampbadge">Terms of release</span>
+          <h3>Paid license, clear separation</h3>
+          <p>Distribution follows a dual model: a proprietary EULA for paid use, MIT terms for the demo artifacts.
+            Built for agencies, teams, and creators who need repeatable operations, not one-off scripts.</p>
           <div class="chips">
             <span class="chip">No blanket deletes</span>
             <span class="chip">SHA-256 duplicate scanning</span>
@@ -233,22 +334,30 @@
     </section>
 
     <section class="panel fade" id="proof">
-      <h2 class="panel-title">The proof language</h2>
-      <div class="proof">
-        <span class="dim">$</span> python3 safe_generated_cleanup.py --dry-run ./app/.next ./app/node_modules<br>
-        <span class="ok">APPROVED</span> 2 targets · 1.9 GB · 0 active processes<br>
-        <span class="ok">DRY-RUN</span> no files changed<br><br>
-        <span class="dim">$</span> python3 find_duplicate_files.py --min-size 1048576 ./Downloads<br>
-        <span class="ok">READ-ONLY</span> exact SHA-256 groups returned
+      <div class="panel-head"><span class="tag">§ 02</span><h2 class="panel-title">Exhibit A — the proof language</h2></div>
+      <div class="exhibit-wrap">
+        <div class="exhibit">
+          <div class="exhibit-label">Console transcript · unedited</div>
+          <div class="term">
+            <span class="p">$</span> <span class="cmd">python3 safe_generated_cleanup.py --dry-run ./app/.next ./app/node_modules</span><br>
+            2 targets · 1.9 GB · 0 active processes<br>
+            no files changed<br><br>
+            <span class="p">$</span> <span class="cmd">python3 find_duplicate_files.py --min-size 1048576 ./Downloads</span><br>
+            exact SHA-256 groups returned, read-only
+          </div>
+          <div class="stamps">
+            <span class="stamp ok">Approved</span>
+            <span class="stamp dry">Dry-run</span>
+            <span class="stamp ro">Read-only</span>
+          </div>
+          <p class="exhibit-note">This is the difference between a cleanup script and a productized system:
+            you inspect what will happen before anything is applied, and you keep the transcript after.</p>
+        </div>
       </div>
-      <p style="color:var(--ink-soft);margin-top:14px;line-height:1.6">
-        This is the core difference between a cleanup script and a productized system:
-        you can inspect what will happen before anything is applied.
-      </p>
     </section>
 
-    <footer class="footer">
-      <span>MAC STORAGE CLEANUP · © Luis Roquette</span>
+    <footer class="foot">
+      <span>Mac Storage Cleanup · field report MSC-01 · © Luis Roquette</span>
       <span>
         <a href="../README.md">Readme</a> ·
         <a href="../LICENSE-EULA.md">EULA</a> ·
